@@ -1,0 +1,373 @@
+﻿@model programowanie_wsi.Models.MatchPlayerViewModel
+
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<link href="~/Content/chosen.css" media="screen" rel="stylesheet" type="text/css">
+
+@using Microsoft.AspNet.Identity;
+
+<h4>Wynik meczu</h4>
+@Html.ActionLink("Wróć", "Index", "Matches", new { id = Model.Match.TournamentID }, new { @class = "btn btn- btn-success btn-lg" })
+<hr />
+<div class="row">
+
+    <div class="col-4">
+        <div class="col">
+            <h2 style="text-align:center;">@Html.DisplayFor(model => model.Match.Team.team_name)</h2>
+            <h2 style="text-align:center;">@Html.DisplayFor(model => model.Match.score)</h2>
+
+
+
+            <img src="~/File?id=@Model.Match.Team.File.FileID" class="img-thumbnail" alt="avatar" width="200" height="200" />
+        </div>
+        @if (Model.goalList != null)
+        {
+            foreach (var item in Model.goalList)
+            {
+
+                if (item.goal > 0)
+                {
+                    for (int i = 0; i < item.goal; i++)
+                    {
+                        <div class="col">
+                            <i class="fa fa-soccer-ball-o"></i>
+                            @item.Player.name
+
+                            @item.Player.surname
+
+                        </div>
+
+                    }
+                }
+
+            }
+
+        }
+    </div>
+    <div class="col-4">
+        <h5>
+            Nazwa turnieju :  @Html.DisplayFor(model => model.Match.Tournament.name)
+        </h5>
+
+        @if (Model.Match.date.HasValue)
+        {
+            <h5>
+                Godzina: @Html.Label(Model.Match.date.Value.ToString("HH:mm"))
+
+            </h5>
+            <h5>
+                Data: @Html.Label(Model.Match.date.Value.ToString("dd MMMM, yyyy")
+                )
+
+            </h5>
+        }
+        else
+        { <h5>
+                Godzina: Nie ustalona
+
+            </h5>
+            <h5>
+                Data: Nie ustalona
+
+            </h5>
+        }
+        <h5>
+            Kolejka: @Html.DisplayFor(model => model.Match.queue)
+        </h5>
+    </div>
+
+    <div class="col-4">
+        <div class="col">
+
+            <h2 style="text-align:center;">@Html.DisplayFor(model => model.Match.Team1.team_name)</h2>
+            <h2 style="text-align:center;">@Html.DisplayFor(model => model.Match.score1)</h2>
+
+            <img src="~/File?id=@Model.Match.Team1.File.FileID" class="img-thumbnail" alt="avatar" width="200" height="200" />
+        </div>
+        @if (Model.goalList1 != null)
+        {
+            foreach (var item in Model.goalList1)
+            {
+
+                if (item.goal > 0)
+                {
+                    for (int i = 0; i < item.goal; i++)
+                    {
+                        
+                        <div class="col">
+                            <ul class="list-group">
+                                <li class="list-group-item list-group-item-secondary">
+                                <i class="fa fa-soccer-ball-o"></i>
+                                @item.Player.name
+
+                                @item.Player.surname
+
+                              </li>
+
+                            </ul>
+                        </div>
+
+
+                    }
+                }
+
+            }
+        }
+    </div>
+    @if (ViewBag.brak != "brak")
+    {
+        <div class="col">
+            <button class="btn btn-primary btn-block" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                Pokaż mape
+            </button>
+            <div class="collapse" id="collapseExample">
+                <div id="map" style="width:100%; height:400px"></div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="row">
+
+    @if (Model.Match.isPlayed == true)
+    {
+    <div class="col">
+     
+        @Html.HiddenFor(model => model.Match.MatchID)
+        @Html.HiddenFor(model => model.Player.PlayerID)
+
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Player.number)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Player.name)
+                    @Html.DisplayNameFor(model => model.Player.surname)
+                </th>
+
+                <th></th>
+            </tr>
+            @foreach (var item in Model.listPlayerMatch)
+        {
+            <tr>
+                @if (item.reserve == false)
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.Player.number)
+                </td>
+                <td>
+                    @Html.ActionLink(item.Player.name, "Details", "Players", new { id = item.Player.PlayerID }, null)
+                    @Html.ActionLink(item.Player.surname, "Details", "Players", new { id = item.Player.PlayerID }, null)
+                </td>
+
+                <td>
+                    @if (item.Match.Team.UserId == User.Identity.GetUserId() || User.IsInRole("Admin"))
+    {
+                <div class="btn-group" role="group">
+                    @Html.ActionLink("Dodaj bramkę", "Edit", "PlayerMatches", new { id = item.PlayerMatchID }, new { @class = "btn btn-info" })
+                    @Html.ActionLink("Usuń", "Delete", "PlayerMatches", new { id = item.PlayerMatchID }, new { @class = "btn btn-danger" })
+                 </div>
+                    }
+                </td>
+        }
+
+
+                @if (item.reserve == true)
+            {
+                <td class="table-success">
+                    @Html.DisplayFor(modelItem => item.Player.number)
+                </td>
+                <td class="table-success">
+                    @Html.ActionLink(item.Player.name, "Details", "Players", new { id = item.Player.PlayerID }, null)
+                    @Html.ActionLink(item.Player.surname, "Details", "Players", new { id = item.Player.PlayerID }, null)
+                </td>
+
+                <td class="table-success">
+                    @if (item.Match.Team.UserId == User.Identity.GetUserId() || User.IsInRole("Admin"))
+                {
+                    <div class="btn-group" role="group">
+                    @Html.ActionLink("Dodaj bramkę", "Edit", "PlayerMatches", new { id = item.PlayerMatchID }, new { @class = "btn btn-info" })
+                    @Html.ActionLink("Usuń", "Delete", "PlayerMatches", new { id = item.PlayerMatchID }, new { @class = "btn btn-danger" })
+                    </div>
+            }
+
+                </td>
+        }
+            </tr>
+    }
+        </table>
+
+    </div>
+
+        <div class="col">
+            <table class="table">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Player.number)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Player.name)
+                        @Html.DisplayNameFor(model => model.Player.surname)
+                    </th>
+
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model.listPlayerMatch1)
+                {
+                    <tr>
+                        @if (item.reserve == false)
+                        {
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Player.number)
+                            </td>
+                            <td>
+                                @Html.ActionLink(item.Player.name, "Details", "Players", new { id = item.Player.PlayerID }, null)
+                                @Html.ActionLink(item.Player.surname, "Details", "Players", new { id = item.Player.PlayerID }, null)
+                            </td>
+
+                            <td>
+                                @if (item.Match.Team.UserId == User.Identity.GetUserId() || User.IsInRole("Admin"))
+                                {
+                                <div class="btn-group" role="group">
+                                @Html.ActionLink("Dodaj bramkę", "Edit", "PlayerMatches", new { id = item.PlayerMatchID }, new { @class = "btn btn-info" })
+                                @Html.ActionLink("Usuń", "Delete", "PlayerMatches", new { id = item.PlayerMatchID }, new { @class = "btn btn-danger" })
+                                </div>
+                                }
+
+                            </td>
+                        }
+                        @if (item.reserve == true)
+                        {
+                            <td class="table-success">
+                                @Html.DisplayFor(modelItem => item.Player.number)
+                            </td>
+                            <td class="table-success">
+
+                                @Html.ActionLink(item.Player.name, "Details", "Players", new { id = item.Player.PlayerID }, null)
+                                @Html.ActionLink(item.Player.surname, "Details", "Players", new { id = item.Player.PlayerID }, null)
+
+                            </td>
+
+                            <td class="table-success">
+
+                                @if (item.Match.Team.UserId == User.Identity.GetUserId() || User.IsInRole("Admin"))
+                                {
+                                    <div class="btn-group" role="group">
+                                    @Html.ActionLink("Dodaj bramke", "Edit", "PlayerMatches", new { id = item.PlayerMatchID }, new { @class = "btn btn-info" })
+                                    @Html.ActionLink("Usuń", "Delete", "PlayerMatches", new { id = item.PlayerMatchID }, new { @class = "btn btn-danger" })
+                                     </div>
+                                }
+
+                            </td>
+
+                        }
+                    </tr>
+                }
+
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="col">
+            <table class="table">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Player.number)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Player.name)
+                        @Html.DisplayNameFor(model => model.Player.surname)
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.Player.Position.position)
+                    </th>
+                  
+                </tr>
+                @foreach (var item1 in Model.PlayerList)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item1.number)
+                        </td>
+                        <td>
+                            @Html.ActionLink(item1.name, "Details", "Players", new { id = item1.PlayerID }, null)
+                            @Html.ActionLink(item1.surname, "Details", "Players", new { id = item1.PlayerID }, null)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item1.Position.position)
+                        </td>
+    
+                    </tr>
+                }
+
+            </table>
+        </div>
+
+        <div class="col">
+           
+
+            <table class="table">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Player.number)
+
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Player.name)
+                        @Html.DisplayNameFor(model => model.Player.surname)
+
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.Player.Position.position)
+                    </th>
+
+                </tr>
+
+                @foreach (var item2 in Model.PlayerList1)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item2.number)
+                        </td>
+                        <td>
+                            @Html.ActionLink(item2.name, "Details", "Players", new { id = item2.PlayerID }, null)
+                            @Html.ActionLink(item2.surname, "Details", "Players", new { id = item2.PlayerID }, null)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item2.Position.position)
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    }
+
+</div>
+        <script>
+                function initMap() {
+                   var myLatLng = { lat: @ViewBag.lat, lng: @ViewBag.lng };
+
+         map = new google.maps.Map(document.getElementById('map'), {
+            center: myLatLng,
+            zoom: 13
+        });
+
+    var marker = new google.maps.Marker({
+        position: myLatLng,
+        map: map
+
+    });
+                }
+
+
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDCxStGX940racvV_GDX-uNxYlDz91mwk&callback=initMap"
+                async defer></script>
+        @section Scripts {
+            @Scripts.Render("~/bundles/jqueryval")
+        }

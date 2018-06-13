@@ -1,0 +1,26 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model IPagedList<programowanie_wsi.Models.Tournament>
+
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+
+<div style="margin-top: 15px">
+    @Html.ActionLink("Nowy turniej", "Create", null, new { @class = "btn btn-danger btn-lg head-btn-one btn-block" })
+</div>
+
+<hr />
+<h3> Lista stworzonych turniejów</h3>
+    <div class="list-group">
+      
+        @foreach (var item in Model)
+        {
+
+                <a href="@Url.Action("Index","Matches", new {id = item.TournamentID })" class="list-group-item list-group-item-action">
+                    <i class="fa fa-soccer-ball-o"></i>  @Html.DisplayFor(modelItem => item.name)
+
+                </a>
+                @Html.ActionLink("Edytuj", "Edit", new { id = item.TournamentID }, new { @class = " pull-right btn btn-xs btn-info" })
+        }
+        </div>
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+   

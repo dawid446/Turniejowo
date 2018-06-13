@@ -1,0 +1,73 @@
+﻿@using programowanie_wsi.Models
+@model LoginViewModel
+
+
+<div class="row justify-content-center" >
+    <div class="col-md-auto ">
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form"}))
+            {
+                @Html.AntiForgeryToken()
+                <h1>Zaloguj się <i class="fa fa-trophy fa-2x" style="color:#cac628"></i> </h1>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                   
+
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="fa fa-user"></i>
+                                    </span>
+                            </div>
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = Html.DisplayNameFor(m => m.Email) })
+                            
+                        </div>
+
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                        </div>
+               
+                <div class="form-group">
+
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="fa fa-lock"></i>
+                                </span>
+                        </div>
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = Html.DisplayNameFor(m => m.Password) })
+
+                    </div>
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                </div>
+               
+                <div class="form-check">
+                    
+                        <div class="checkbox">
+                            @Html.CheckBoxFor(m => m.RememberMe)
+                            Zapmiętaj mnie
+                        </div>
+                    
+                </div>
+                <div class="form-group">
+                   
+                        <input type="submit" value="Log in" class="btn btn-primary btn-lg btn-block" />
+                    
+                </div>
+                <p>
+                    <hr />
+                    @Html.ActionLink("Zarejestruj się", "Register",null, new {@class = "btn btn-secondary btn-lg btn-block" })
+                </p>
+             
+                    <p>
+                        @Html.ActionLink("Zapomnialeś hasła?", "ForgotPassword")
+                    </p>
+            }
+        </div>
+    </div>
+    
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

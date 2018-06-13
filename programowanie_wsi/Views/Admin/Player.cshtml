@@ -1,0 +1,82 @@
+﻿@model IEnumerable<programowanie_wsi.Models.Player>
+
+
+
+<h1>Zawodnicy</h1>
+
+
+<table id="myTable" class="table table-striped table-bordered" cellspacing="0" style="width:100%">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.number)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.surname)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Position.position)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.height)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.weight)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.number)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.surname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Position.position)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.height)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.weight)
+                </td>
+
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.PlayerID }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.PlayerID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.PlayerID })
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+<link href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
+@section Scripts{
+
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+
+    <script>
+
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+
+    </script>
+
+
+}

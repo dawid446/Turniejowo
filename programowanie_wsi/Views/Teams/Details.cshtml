@@ -1,0 +1,33 @@
+﻿@model programowanie_wsi.Models.Team
+
+
+<div class="col">
+    <h1>@Html.DisplayFor(model => model.team_name)</h1>
+    <hr />
+    <dl class="dl-horizontal">
+       
+        <img src="~/File?id=@Model.File.FileID" alt="avatar" width="200" height="200" />
+
+    </dl>
+</div>
+<div class="col">
+    @Html.ActionLink("Zawodnicy drużyny", "Index", "TournamentTeams", new { id = Model.TeamID }, new { @class = "btn btn-success btn-lg btn-block" })
+    <h3> Turnieje, w których bierze udział drużyna</h3>
+    <div class="list-group">
+        @foreach (var item in ViewBag.List)
+        {
+
+            @Html.ActionLink((string)item.Tournament.name, "Index", "Matches", new { id = item.Tournament.TournamentID }, new { @class = "list-group-item list-group-item-action" })
+
+        }
+    </div>
+
+
+    <p>
+        <div class="btn-group">
+            @Html.ActionLink("Wróć do drużyn", "Index", null, new { @class = "btn btn-primary" })
+            @Html.ActionLink("Edytuj drużyne", "Edit", new { id = Model.TeamID }, new { @class = "btn btn-primary" })
+
+        </div>
+    </p>
+</div>

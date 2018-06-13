@@ -1,0 +1,56 @@
+﻿@model IEnumerable<programowanie_wsi.Models.Team>
+
+
+<h2>Drużyny</h2>
+
+<div class="col" style="padding-bottom:20px">
+    @Html.ActionLink("Wróć", "Index", null, new { @class = "btn btn-success btn-lg" })
+</div>
+
+<table id="myTable">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.User.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.team_name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.team_name)
+                </td>
+                <td>
+                    @Html.ActionLink("Zawodnicy drużyny", "Index", "TournamentTeams", new { id = item.TeamID }, null) |
+                    @Html.ActionLink("Edytuj", "Edit", "Teams", new { id = item.TeamID }, null) |
+                    @Html.ActionLink("Delete", "Delete", "Teams", new { id = item.TeamID }, null)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<link href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
+@section Scripts{
+
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+
+    <script>
+
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+
+    </script>
+
+
+}

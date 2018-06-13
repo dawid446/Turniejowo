@@ -1,0 +1,96 @@
+﻿@model programowanie_wsi.Models.TournamnetViewModel
+
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<link href="~/Content/chosen.css" media="screen" rel="stylesheet" type="text/css">
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+       
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Player.name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Player.name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Player.name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Player.surname, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Player.surname, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Player.surname, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Player.number, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Player.number, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Player.number, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Player.Position.position, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Player.PositionID, (SelectList)ViewBag.PositionID, null, htmlAttributes: new { @class = "form-control" })  
+                @Html.ValidationMessageFor(model => model.Player.PositionID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Player.height, htmlAttributes: new { @class = "control-label col-md-2" }) 
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Player.height, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Player.height, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Player.weight, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Player.weight, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Player.weight, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        
+
+    <div class="form-group">
+            <label class="control-label col-md-2">
+                W jakim turnieju chcesz dodać zawodnika
+            </label>
+        @Html.DropDownListFor(m => m.tournamnetList, Model.TournamentTeam.Select(x => new SelectListItem { Text = x.Tournament.name, Value = x.Tournament.TournamentID.ToString() }), new { @class = "chosen-select", @multiple = "true", @selected = "3", style = "width:350px;", tabindex = "4" })
+ </div>
+        <script src="~/Scripts/chosen.jquery.js" type="text/javascript"></script>
+        <script>
+
+            $(".chosen-select").chosen({
+                width: "50%",
+                no_results_text: "Nie ma takiego turnieju!",
+                placeholder_text_multiple: 'Wybierz turniej...',
+
+            });
+            $(".chosen-select").val(@ViewBag.TournamentID).trigger('chosen:updated');
+
+        </script>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </div>
+        </div>
+        }
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrap")
+}

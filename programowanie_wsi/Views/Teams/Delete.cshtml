@@ -1,0 +1,28 @@
+﻿@model programowanie_wsi.Models.Team
+
+<h3>Chcesz usunąć zespół?</h3>
+<div>
+    <h4>Drużyna</h4>
+    <hr />
+    <dl class="dl-horizontal">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.team_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.team_name)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="btn-group">
+                @Html.ActionLink("Wroć", "Index", null, new { @class = "btn btn-primary" })
+                <input type="submit" value="Usuń" class="btn btn-danger" />
+        </div>
+    }
+</div>

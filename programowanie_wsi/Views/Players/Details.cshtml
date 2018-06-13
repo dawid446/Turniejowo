@@ -1,0 +1,31 @@
+﻿@model programowanie_wsi.Models.Player
+
+
+
+<h1>Profil Zawodnika</h1>
+
+<div class="col">
+    <h4>@Html.DisplayFor(model => model.name) @Html.DisplayFor(model => model.surname) </h4>
+
+
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">@Html.DisplayNameFor(model => model.number) @Html.DisplayFor(model => model.number) </li>
+        <li class="list-group-item">@Html.DisplayNameFor(model => model.Position.position) @Html.DisplayFor(model => model.Position.position)</li>
+        <li class="list-group-item">@Html.DisplayNameFor(model => model.height) @Html.DisplayFor(model => model.height)</li>
+        <li class="list-group-item">@Html.DisplayNameFor(model => model.weight) @Html.DisplayFor(model => model.weight)</li>
+    </ul>
+    
+    
+
+</div>
+<div class="col">
+    <h3> Turnieje, w których bierze udział zawodnik</h3>
+    <div class="list-group">
+        @foreach (var item in ViewBag.List)
+        {
+            
+            @Html.ActionLink((string)item.Tournament.name, "Index", "Matches", new { id = item.Tournament.TournamentID }, new { @class = "list-group-item list-group-item-action"  })
+       }
+    </div>
+
+</div>

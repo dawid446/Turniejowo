@@ -1,0 +1,203 @@
+﻿@model programowanie_wsi.Models.Match
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+@*<script src="https://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>*@
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+@*<script src="~/Scripts/jquery-3.0.0.js"></script>*@
+
+<script src="~/Scripts/moment.js"></script>
+@*<script src="~/Scripts/moment-with-locales.js"></script>*@
+
+@*<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />*@
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h2>Godzina i miejsce</h2>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.MatchID)
+        @Html.HiddenFor(model => model.score1)
+        @Html.HiddenFor(model => model.score)
+        @Html.HiddenFor(model => model.queue)
+        @Html.HiddenFor(model => model.TeamID)
+        @Html.HiddenFor(model => model.isPlayed)
+        @Html.HiddenFor(model => model.TeamID1)
+        @Html.HiddenFor(model => model.TournamentID)
+        @Html.HiddenFor(model => model.LocationID)
+
+        <div class="form-group">
+            <div class=" col-md-2">
+                <h2>Data</h2>
+
+            </div>
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.date, "{0:dd/MM/yyyy}", new { @class = "date form-control" })
+                @Html.ValidationMessageFor(model => model.date, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <script>
+            $(function () {
+                $(".date").datetimepicker({
+                    format: 'DD/MM/YYYY hh:mm',
+           
+                });
+
+                jQuery.validator.methods["date"] = function (value, element) { return true; }
+            });
+        </script>
+        <div class="form-group">
+
+            <div class=" col-md-2">
+                <h2>Miejsce</h2>
+            </div>
+
+            <div class="col-md-10">
+                <div class="alert alert-success text-center" role="alert">
+                    Pinezkę można przesuwać
+                </div>
+                @Html.HiddenFor(model => model.Google_Map.lat, new { @id = "latitude" })
+                @Html.HiddenFor(model => model.Google_Map.lng, new { @id = "longitude" })
+
+                <input id="pac-input" class="controls" type="text" placeholder="Wpisz lokalizacje">
+                <div id="map" style="width:100%; height:400px"></div>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="btn-group">
+                    @Html.ActionLink("Wróć", "Index", "Matches", new { id = Model.TournamentID }, new { @class = "btn btn-danger" })
+                    <input type="submit" value="Zapisz zmiany" class="btn btn-success" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+
+
+</div>
+<div class="row">
+    <div class="col">
+
+    </div>
+</div>
+<script>
+    var map;
+
+
+    function initAutocomplete() {
+
+        var myLatLng = { lat: @ViewBag.lat, lng: @ViewBag.lng };
+
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: myLatLng,
+            zoom: 7
+        });
+
+    var marker = new google.maps.Marker({
+        position: myLatLng,
+        map: map,
+        draggable: true
+    });
+
+
+    var point = marker.getPosition();
+    map.panTo(point);
+    document.getElementById("latitude").value = point.lat();
+    document.getElementById("longitude").value = point.lng();
+
+    google.maps.event.addListener(marker, 'dragend', function (event) {
+        var point = marker.getPosition();
+        map.panTo(point);
+
+        document.getElementById("latitude").value = point.lat();
+        document.getElementById("longitude").value = point.lng();
+
+    });
+
+
+    var input = document.getElementById('pac-input');
+    var searchBox = new google.maps.places.SearchBox(input);
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+    map.addListener('bounds_changed', function () {
+        searchBox.setBounds(map.getBounds());
+    });
+
+    searchBox.addListener('places_changed', function () {
+        var places = searchBox.getPlaces();
+
+        if (places.length == 0) {
+            return;
+        }
+        marker.setMap(null);
+
+        var bounds = new google.maps.LatLngBounds();
+        places.forEach(function (place) {
+            if (!place.geometry) {
+                console.log("Returned place contains no geometry");
+                return;
+            }
+            var icon = {
+                url: place.icon,
+                size: new google.maps.Size(71, 71),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(17, 34),
+                scaledSize: new google.maps.Size(25, 25)
+            };
+
+            marker = new google.maps.Marker({
+                map: map,
+                title: place.name,
+                position: place.geometry.location,
+                draggable: true
+            });
+            var point = marker.getPosition();
+            map.panTo(point);
+            document.getElementById("latitude").value = point.lat();
+            document.getElementById("longitude").value = point.lng();
+
+            google.maps.event.addListener(marker, 'dragend', function (event) {
+                var point = marker.getPosition();
+                map.panTo(point);
+
+                document.getElementById("latitude").value = point.lat();
+                document.getElementById("longitude").value = point.lng();
+
+            });
+
+            if (place.geometry.viewport) {
+                bounds.union(place.geometry.viewport);
+            } else {
+                bounds.extend(place.geometry.location);
+            }
+
+        });
+        map.fitBounds(bounds);
+
+    });
+}
+
+
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDCxStGX940racvV_GDX-uNxYlDz91mwk&libraries=places&callback=initAutocomplete"
+        async defer></script>
+
+
+
+
+@*@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Styles.Render("~/bundles/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+}*@

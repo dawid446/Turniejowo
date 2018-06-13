@@ -1,0 +1,125 @@
+﻿@model programowanie_wsi.Models.PlayerTeamViewModel
+@using Microsoft.AspNet.Identity;
+
+
+<h2>@Model.Team.team_name</h2>
+@if (Model.Tournament != null)
+{
+    <h3>Nazwa turnieju: @Html.ActionLink(Model.Tournament.name, "Index", "Matches", new { id = Model.Tournament.TournamentID }, null)</h3>
+}
+<p>
+    <img src="~/File?id=@Model.Team.File.FileID" class="img-thumbnail align-items-center" alt="avatar" width="200" height="200" />
+    @if (Model.Team.UserId == User.Identity.GetUserId() || User.IsInRole("Admin"))
+    {
+        if (Model.Tournament != null)
+        {
+            @Html.ActionLink("Dodaj zawodnika", "Create", new { id= Model.Team.TeamID, ids =Model.Tournament.TournamentID }, new { @class = "btn btn-success" })
+        }
+        else
+        {
+            @Html.ActionLink("Dodaj zawodnika", "Create", new { id = Model.Team.TeamID }, new { @class = "btn btn-success" })
+        }
+    }
+</p>
+<table id="myTable" class="table table-striped table-bordered" cellspacing="0" style="width:100%">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Player.number)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Player.name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Player.surname)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Player.Position.position)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Player.height)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Player.weight)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.PlayerList)
+        {
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.number)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.surname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Position.position)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.height)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.weight)
+                </td>
+
+                <td>
+
+                    @Html.ActionLink("Szczegóły", "Details", new { id = item.PlayerID })
+                    @if (Model.Team.UserId == User.Identity.GetUserId() || User.IsInRole("Admin"))
+                    {
+                        @Html.ActionLink("Edytuj ", "Edit", new { id = item.PlayerID })
+
+                        if (Model.Tournament != null)
+                        {
+                            @Html.ActionLink("Usuń", "Delete", new { id = item.PlayerID, ids = Model.Team.TeamID, idss = Model.Tournament.TournamentID })
+                        }
+                        else
+                        {
+                            @Html.ActionLink("Usuń", "Delete", new { id = item.PlayerID, ids = Model.Team.TeamID })
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+@Html.ActionLink("Zawodnicy zespołu w innych turniejach", "Index", "TournamentTeams", new { id = Model.Team.TeamID }, new { @class = "btn btn-primary" })
+<link href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
+@section Scripts{
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.16/r-2.2.1/datatables.min.css" />
+
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.16/r-2.2.1/datatables.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                responsive: true,
+                "language": {
+                    "lengthMenu": "Wyświetl _MENU_ rekordów na stronę",
+                    "zeroRecords": "Brak wyników",
+                    "info": "Strona _PAGE_ z _PAGES_",
+                    "infoEmpty": "",
+                    "infoFiltered": "(filtered from _MAX_ total records)",
+                    "search": "Wyszukaj"
+                }
+            });
+        });
+
+    </script>
+
+
+}

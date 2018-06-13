@@ -1,0 +1,39 @@
+﻿@model programowanie_wsi.Models.TournamentTeamsViewModel
+@using Microsoft.AspNet.Identity;
+
+<h1>@Model.Team.team_name</h1>
+<img src="~/File?id=@Model.Team.File.FileID" class="img-thumbnail align-items-center" alt="avatar" width="200" height="200" />
+
+@if (Model.Team.UserId == User.Identity.GetUserId() || User.IsInRole("Admin"))
+{
+    @Html.ActionLink("Wszyscy zawodnicy drużyny", "Index", "Players", new { id = Model.Team.TeamID }, new { @class = "btn btn-danger btn-lg head-btn-one btn-block" })
+}
+else
+{
+    @Html.ActionLink("Zawodnicy drużyny", "Index", "Players", new { id = Model.Team.TeamID }, new { @class = "btn btn-danger btn-lg head-btn-one btn-block" })
+}
+<table class="table">
+    <tr>
+        <th>
+            Nazwa trunieju
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.TournamentList)
+    {
+        <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.name)
+            </td>
+            <td class="text-right">
+                <div class="btn-group" role="group" >
+                    @Html.ActionLink("Przejdź do turnieju", "Index", "Matches", new { id = item.TournamentID }, new { @class = "btn btn-primary " })
+                    @Html.ActionLink("Lista zawodników w turnieju", "Index", "Players", new { id = Model.Team.TeamID, ids = item.TournamentID }, new { @class = "btn btn-info " })
+                </div>
+            </td>
+        </tr>
+    }
+
+</table>

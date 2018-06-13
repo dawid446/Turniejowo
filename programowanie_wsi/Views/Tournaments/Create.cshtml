@@ -1,0 +1,124 @@
+﻿@model programowanie_wsi.Models.TournamentTeamViewModel
+  
+
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<link href="~/Content/chosen.css" media="screen" rel="stylesheet" type="text/css">
+
+
+<h2>Tworzenie turnieju</h2>
+
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="row justify-content-center" >
+            <div class="col">
+
+
+        <div class="form-group">
+           
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+             
+                @Html.LabelFor(model => model.Tournament.name, htmlAttributes: new { @class = "control-label col-md-2" })
+             
+                <div class="col-md-6">
+                    @Html.EditorFor(model => model.Tournament.name, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Tournament.name, "", new { @class = "text-danger" })
+                </div>
+          </div>
+              <hr />
+            <div class="form-group">
+             <label class="control-label col-md-2">
+                Stworzone drużyny
+            </label>
+             <div class="col-md-6">
+                 @Html.DropDownListFor(m => m.teamList, Model.Team.Select(x => new SelectListItem { Text = x.team_name, Value = x.TeamID.ToString() }), new { @class = "chosen-select", @multiple = "true", tabindex = "4", @selected = 3 })
+                 </div>
+             </div>
+        <script src="~/Scripts/chosen.jquery.js" type="text/javascript"></script>
+        <script>
+
+            $(".chosen-select").chosen({
+                width: "100%",
+                no_results_text: "Nie ma takiej drużyny!",
+              
+            });
+           
+
+        </script>
+
+            @if(TempData["Error"] != null)
+            {
+                 <h2 style="color:red;">@TempData["Error"]</h2> 
+            }
+           
+            <hr />
+            <div class="form-group">
+                <div class="col-md-6">
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>
+                                    <b>
+                                       Dodaj nowe drużyny do turnieju
+                                    </b>
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody id="tbBooks"></tbody>
+                    </table>
+                </div>
+
+                <div class="col-md-6 ">
+
+
+                    <div>
+                        <input id="btnAddBook" class="btn btn-primary btn-block" type="button" onclick="addRow();" value="Dodaj drużyne" />
+                    </div>
+
+                </div>
+                <script language="javascript" type="text/javascript">
+
+
+                    function addRow() {
+
+                        var index = $("#tbBooks").children("tr").length;
+                        if (index < 16) {
+                            var indexCell = "<td style='display:none'><input name='Team.Index'  type='hidden' value='" + index + "' /></td>";
+                            var titleCell = "<td><input id='Team_" + index + "__team_name' name='Team[" + index + "].team_name' type='text' class='form-control' value=''  required/></td>";
+                            var removeCell = "<td><input id='btnAddBook' class='btn btn-danger' type='button' value='Usuń' onclick='removeRow(" + index + ");' /></td>";
+
+                            var newRow = "<tr id='trBook" + index + "'>" + indexCell + titleCell + removeCell + "</tr>";
+                            $("#tbBooks").append(newRow);
+                        }
+                    }
+
+                    function removeRow(id) {
+                        var controlToBeRemoved = "#trBook" + id;
+                        $(controlToBeRemoved).remove();
+                    }
+                </script>
+
+            </div>
+
+
+            <hr />
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <div class="btn-group">
+                        @Html.ActionLink("Wróć", "Index", null, new { @class = "btn btn-danger" })
+                        <input type="submit" value="Stwórz" class="btn btn-success btn" />
+                    </div>
+                    </div>
+                </div>
+        </div>
+            </div>
+
+    }
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+        @Scripts.Render("~/bundles/bootstrap")
+    }

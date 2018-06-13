@@ -1,0 +1,247 @@
+﻿@model IEnumerable<programowanie_wsi.Models.Match>
+@using Microsoft.AspNet.Identity;
+
+<h1>@Html.Label(Model.ElementAt(0).Tournament.name) <i class="fa fa-futbol-o" aria-hidden="true"></i></h1>
+
+<h3>Data stworzenia turnieju: @Html.Label(Model.ElementAt(0).Tournament.date.ToString("dd MMMM, yyyy"))</h3>
+
+<h2>Tabela turnieju</h2>
+<div class="col" style="padding-bottom: 20px">
+
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        Pokaż tabele
+    </button>
+    <div class="collapse" id="collapseExample">
+        <table class="table">
+            <tr>
+                <th>L.p</th>
+                <th>
+                    Nazwa drużyny
+                </th>
+                <th>
+                    M.
+                </th>
+                <th>
+                    Z.
+                </th>
+                <th>
+                    R.
+                </th>
+                <th>
+                    P.
+                </th>
+                <th>
+                    G+
+                </th>
+                <th>
+                    G-
+                </th>
+                <th>
+                    Pkt
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in ViewBag.List)
+            {
+                <tr>
+                    <td>
+                        <img src="~/File?id=@item.id_file" class="img-thumbnail" alt="avatar" width="35" />
+                    </td>
+                    <td>
+                        @item.team_name
+                    </td>
+                    <td>
+                        @item.match
+
+                    </td>
+                    <td>
+                        @item.win
+                    </td>
+                    <td>
+                        @item.draw
+                    </td>
+                    <td>
+                        @item.lose
+                    </td>
+                    <td>
+                        @item.score_goal
+                    </td>
+                    <td>
+                        @item.lose_goal
+                    </td>
+                    <td>
+                        @item.points
+                    </td>
+
+                </tr>
+            }
+
+        </table>
+
+
+    </div>
+</div>
+
+
+<div class="col">
+    <table id="myTable"  class="table table-striped table-bordered" cellspacing="0" style="width:100%">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.date)
+                  
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Team.team_name)
+                </th>
+                <th>
+                </th>
+                <th>
+
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Team1.team_name)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.queue)
+                </th>
+
+                <th></th>
+                <th></th>
+                <th></th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+               
+                <tr>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.date)
+
+                    </td>
+                    <td>
+                        @Html.ActionLink(item.Team.team_name, "Index", "Players", new { id = item.TeamID, ids =item.TournamentID }, null)
+
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.score)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.score1)
+                    </td>
+                    <td>
+                        @Html.ActionLink(item.Team1.team_name, "Index", "Players", new { id = item.TeamID1, ids = item.TournamentID }, null)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.queue)
+                    </td>
+                    @if (item.isBreak == false)
+                    {
+
+
+                        if (item.Team.UserId == User.Identity.GetUserId() || User.IsInRole("Admin"))
+                        {
+                            <td>
+                                @Html.ActionLink("Wpisz date i miejsce", "Time", new { id = item.MatchID })
+
+                            </td>
+                            if (item.isPlayed == false)
+                            {
+                                <td>
+                                    @Html.ActionLink("Wypełnij raport", "Create", new { id = item.MatchID, ids = item.TournamentID })
+
+                                </td>
+                            }
+                            if (item.isPlayed == true)
+                            {
+                                <td>
+                                    @Html.ActionLink("Edytuj Wynik", "Edit", new { id = item.MatchID })
+
+                                </td>
+                            }
+                            <td>
+                                @Html.ActionLink("Podląd", "Details", new { id = item.MatchID, ids = item.TournamentID })
+
+                            </td>
+                        }
+                        else
+                        {
+                            <td></td>
+                            <td></td>
+                            <td>
+                                @Html.ActionLink("Podląd", "Details", new { id = item.MatchID, ids = item.TournamentID })
+
+                            </td>
+                        }
+
+                    }
+                    else
+                    {
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.16/r-2.2.1/datatables.min.css" />
+@section Scripts{
+
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.16/r-2.2.1/datatables.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            var table = $('#myTable').DataTable({
+
+                responsive: true,
+
+                "columnDefs": [
+                    { className: "text-right", "targets": [1, 2] },
+                    { "visible": false, "targets": 5 },
+                ],
+                "order": [[5, 'asc']],
+                "displayLength": 10,
+                "drawCallback": function (settings) {
+                    var api = this.api();
+                    var rows = api.rows({ page: 'current' }).nodes();
+                    var last = null;
+
+                    api.column(5, { page: 'current' }).data().each(function (group, i) {
+                        if (last !== group) {
+                            $(rows).eq(i).before(
+                                '<tr class="group"><td colspan="8">' + group + '</td></tr>'
+                            );
+
+                            last = group;
+                        }
+                    });
+                }
+            });
+
+            // Order by the grouping
+            $('#example tbody').on('click', 'tr.group', function () {
+                var currentOrder = table.order()[0];
+                if (currentOrder[0] === 5 && currentOrder[1] === 'asc') {
+                    table.order([5, 'desc']).draw();
+                }
+                else {
+                    table.order([5, 'asc']).draw();
+                }
+            });
+        });
+
+    </script>
+
+
+}

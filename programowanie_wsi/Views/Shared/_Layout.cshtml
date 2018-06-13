@@ -1,0 +1,85 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tournamnet</title>
+    @Styles.Render("~/Content/css")
+
+
+</head>
+<body>
+   
+        <nav class="navbar navbar-expand-sm navbar-light bg-faded sticky-top" style="background:#15224f">
+            <div class="container">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav-content" aria-controls="nav-content" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+            
+                <a class="navbar-brand" href="/home/index"><i class="fa fa-trophy fa-2x faa-wrench animated " style="color:#cac628"></i><font color="white"> Tournament </font> </a>
+
+                <div class="collapse navbar-collapse" id="nav-content">
+                    <ul class="navbar-nav">
+                        @if (Request.IsAuthenticated)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" id="Preview" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                    Panel użytkownika
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="Preview">
+
+                                    @Html.ActionLink("Turnieje", "Index", "Tournaments", null, new { @class = "dropdown-item" })
+                                    @Html.ActionLink("Drużyny", "Index", "Teams", null, new { @class = "dropdown-item" })
+                                    @Html.ActionLink("Ustawienia konta", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @class = "dropdown-item" })
+                                </div>
+                            </li>
+                        }
+                        @if(User.IsInRole("Admin"))
+                        {
+                             <li class="nav-item"> @Html.ActionLink("Panel Administratora", "Index", "Admin", null, new { @class = "nav-link" })</li>
+                        }
+                        <li class="nav-item"> @Html.ActionLink("Wyszukaj", "Index", "Search", null, new { @class = "nav-link" })</li>
+                        <li class="nav-item"> @Html.ActionLink("Kontakt", "Contact", "Home", null, new { @class = "nav-link" })</li>
+
+
+                    </ul>
+
+                </div>
+                <div class="justify-content-end">
+                    @Html.Partial("_LoginPartial")
+                </div>
+            </div>
+</nav>
+
+    
+  
+
+    <div class="container body-content">
+        @RenderBody()
+        
+       
+    </div>
+
+    <div class="footer-bottom">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="copyright" style="color:white">
+                       @DateTime.Now.ToString("yyyy") © Meczowo.com
+                       
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jqueryval")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,70 @@
+﻿@model IEnumerable<programowanie_wsi.Models.Team>
+
+
+<h1>Drużyny</h1>
+
+<p>
+    @Html.ActionLink("Strzórz drużynę", "Create", null, new { @class = "btn btn-primary" })
+</p>
+
+<table id="myTable" class="table table-striped table-bordered nowrap" cellspacing="0" style="width:100%">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.team_name)
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @Html.ActionLink(item.team_name, "Details", new { id = item.TeamID })
+
+                </td>
+                <td>
+                    @Html.ActionLink("Zawodnicy drużyny","Index", "TournamentTeams", new { id = item.TeamID },null)
+                </td>
+                <td>
+                    @Html.ActionLink("Edytuj", "Edit", new { id = item.TeamID })
+                </td>
+                <td>
+                    @Html.ActionLink("Usuń", "Delete", new { id = item.TeamID })
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.16/r-2.2.1/datatables.min.css" />
+@section Scripts{
+
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.16/r-2.2.1/datatables.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                responsive: true,
+                "language": {
+                    "lengthMenu": "Wyświetl _MENU_ rekordów na stronę",
+                    "zeroRecords": "Brak wyników",
+                    "info": "Strona _PAGE_ z _PAGES_",
+                    "infoEmpty": "",
+                    "infoFiltered": "(filtered from _MAX_ total records)",
+                    "search": "Wyszukaj"
+                }
+            });
+
+        });
+    </script>
+
+
+}

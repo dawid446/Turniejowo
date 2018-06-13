@@ -1,0 +1,92 @@
+﻿
+
+    @Html.Partial("home")
+        
+        <div class="row" style="padding-top: 20px">
+
+                
+                    <div class="col">
+                        <div class="service-div text-center">
+                            <i class="fa fa-trophy fa-5x faa-vertical animated"></i>
+                            <h4>Turnieje</h4>
+                            <p>
+                                <div class="shiva">
+                                    <span class="count">@ViewBag.LiczbaTurniej</span>
+                                    +
+                                </div>
+                            </p>
+
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="service-div text-center">
+                            <i class="fa fa-shirtsinbulk fa-5x faa-pulse animated"></i>
+                            <h4>Drużyny</h4>
+                            <p>
+                                <div class="shiva">
+                                    <span class="count">@ViewBag.LiczbaDruzyn</span>
+                                    +
+                                </div>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="service-div text-center">
+                            <i class="fa fa-futbol-o fa-5x faa-shake animated"></i>
+                            <h4>Bramki</h4>
+                            <p>
+                                <div class="shiva">
+                                    <span class="count">@ViewBag.LiczbaBramek</span>
+                                    +
+                                </div>
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+
+       
+
+
+
+
+        <div class="row ">
+            <div class="col">
+                <h1>Najnowsze stworzone turnieje :</h1>
+
+
+                <div class="list-group" style="padding : 50px">
+
+
+                    @{ var one = true; }
+
+                    @foreach (var wartosc in ViewBag.Turniej)
+                    {
+
+                        if (one == true)
+                        {
+                            <a href="~/Matches/Index/@wartosc.TournamentID" class="list-group-item active" style="background-color: #227e10;border-color:#227e10 ">@wartosc.name </a>
+                            one = false;
+                        }
+                        else
+                        {
+                            <a href="~/Matches/Index/@wartosc.TournamentID" class="list-group-item list-group-item-action"> @wartosc.name</a>
+                        }
+
+                    }
+
+
+                </div>
+            </div>
+        </div>
+   
+    
+    <script src="assets/plugins/jquery-1.10.2.js"></script> 
+    <script src="assets/plugins/bootstrap.js"></script>
+    <script src="assets/js/custom.js"></script>
+    <style type="text/css">
+
+        </style>
+     
+        
