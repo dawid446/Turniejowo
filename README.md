@@ -1,7 +1,7 @@
 # Turniejowo
 ![screen shot 02-20-19 at 03 33 pm](https://user-images.githubusercontent.com/26162742/53098861-daf38d00-3524-11e9-912d-929a52461c1f.PNG)
 
-It's project to learn ASP.NET MVC 5. User can create account and join to activities. Administators can create a  catergory classes and add activities to them. 
+Web application supporting the creation of football tournaments. The application will allow you to create a tournament in a circular system and its management.
 
 ## Run Application
 
@@ -11,7 +11,6 @@ https://turniejowo.azurewebsites.net/
 * ASP.NET MVC 5
 * Microsoft SQL Server
 * HTML, CSS
-* FullCalendar
 ## Authors
 
 * **Dawid Majewski** - *Initial work* - [dawid446](https://github.com/dawid446h)
